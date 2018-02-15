@@ -6,7 +6,6 @@
 // Load Wi-Fi library
 #include <WiFi.h>
 #include <Wire.h>
-//#include <SPI.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
 
