@@ -86,8 +86,7 @@ void loop(){
             client.println("<!DOCTYPE html><html>");
             client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             client.println("<link rel=\"icon\" href=\"data:,\">");
-            // CSS to style the on/off buttons 
-            // Feel free to change the background-color and font-size attributes to fit your preferences
+            // CSS to style the table 
             client.println("<style>body { text-align: center; font-family: \"Trebuchet MS\", Arial;}");
             client.println("table { border-collapse: collapse; width:35%; margin-left:auto; margin-right:auto; }");
             client.println("th { padding: 12px; background-color: #0043af; color: white; }");
