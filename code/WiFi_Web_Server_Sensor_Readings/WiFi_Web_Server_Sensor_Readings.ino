@@ -39,7 +39,7 @@ void setup() {
   // default settings
   // (you can also pass in a Wire library object like &Wire2)
   //status = bme.begin();  
-  if (!bme.begin()) {
+  if (!bme.begin(0x76)) {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while (1);
   }
