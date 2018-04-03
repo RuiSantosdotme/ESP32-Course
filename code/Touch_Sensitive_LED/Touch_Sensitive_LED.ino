@@ -1,5 +1,5 @@
 // set pin numbers
-#define touchPin  T0 
+const int touchPin = 4; 
 const int ledPin = 16;
 
 // change with your threshold value
