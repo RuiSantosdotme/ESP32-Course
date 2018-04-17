@@ -94,7 +94,7 @@ void loop(){
             client.println("Connection: close");
             client.println();
             
-            // turns the GPIOs on and off
+            // Controls the motor pins according to the button pressed
             if (header.indexOf("GET /forward") >= 0) {
               Serial.println("Forward");
               digitalWrite(motor1Pin1, LOW);
