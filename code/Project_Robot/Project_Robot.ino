@@ -160,7 +160,7 @@ void loop(){
            
             client.println("</html>");
             
-            //Request example: GET /?value=100& HTTP/1.1 - sets PWM duty cycle to 100
+            //Request example: GET /?value=100& HTTP/1.1 - sets PWM duty cycle to 100% = 255
             if(header.indexOf("GET /?value=")>=0) {
               pos1 = header.indexOf('=');
               pos2 = header.indexOf('&');
