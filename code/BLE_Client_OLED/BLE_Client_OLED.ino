@@ -6,6 +6,7 @@
 #include "BLEDevice.h"
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
 
 //Default Temperature is in Celsius
 //Comment the next line for Temperature in Fahrenheit
