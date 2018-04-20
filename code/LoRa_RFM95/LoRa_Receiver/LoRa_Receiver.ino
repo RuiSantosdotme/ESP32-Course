@@ -7,6 +7,7 @@
 #include <LoRa.h>
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
 
 //define the pins used by the transceiver module
 #define ss 5
