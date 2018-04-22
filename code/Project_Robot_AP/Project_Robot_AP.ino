@@ -6,7 +6,7 @@
 // Load Wi-Fi library
 #include <WiFi.h>
 
-// Replace with your network credentials
+// You can customize the SSID name and change the password
 const char* ssid     = "ESP32-Robot";
 const char* password = "123456789";
 
