@@ -126,7 +126,7 @@ void loop(){
             client.println("<!DOCTYPE HTML><html>");
             client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
             client.println("<link rel=\"icon\" href=\"data:,\">");
-            // CSS to style the on/off buttons 
+            // CSS to style the buttons 
             // Feel free to change the background-color and font-size attributes to fit your preferences
             client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
             client.println(".button { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; background-color: #4CAF50;");
