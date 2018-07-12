@@ -85,6 +85,7 @@ void setup(){
 
   //Go to sleep now
   Serial.println("Going to sleep now");
+  delay(1000);
   esp_deep_sleep_start();
   Serial.println("This will never be printed");
 }
