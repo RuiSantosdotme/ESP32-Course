@@ -17,7 +17,7 @@ extern "C" {
 
 // Change the MQTT_HOST variable to your Raspberry Pi IP address, 
 // so it connects to your Mosquitto MQTT broker
-#define MQTT_HOST IPAddress(192, 168, 1, 144)
+#define MQTT_HOST IPAddress(192, 168, 1, XXX)
 #define MQTT_PORT 1883
 
 // Create objects to handle MQTT client
