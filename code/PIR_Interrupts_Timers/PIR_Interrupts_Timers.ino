@@ -1,6 +1,6 @@
 /*********
   Rui Santos
-  Complete project details at http://randomnerdtutorials.com  
+  Complete project details at https://randomnerdtutorials.com  
 *********/
 
 #define timeSeconds 10
@@ -13,6 +13,14 @@ const int motionSensor = 27;
 unsigned long now = millis();
 unsigned long lastTrigger = 0;
 boolean startTimer = false;
+
+// Checks if motion was detected, sets LED HIGH and starts a timer
+void IRAM_ATTR detectsMovement() {
+  Serial.println("MOTION DETECTED!!!");
+  digitalWrite(led, HIGH);
+  startTimer = true;
+  lastTrigger = millis();
+}
 
 void setup() {
   // Serial port for debugging purposes
@@ -37,12 +45,4 @@ void loop() {
     digitalWrite(led, LOW);
     startTimer = false;
   }
-}
-
-// Checks if motion was detected, sets LED HIGH and starts a timer
-void detectsMovement() {
-  Serial.println("MOTION DETECTED!!!");
-  digitalWrite(led, HIGH);
-  startTimer = true;
-  lastTrigger = millis();
 }
