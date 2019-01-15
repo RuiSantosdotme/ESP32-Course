@@ -46,9 +46,17 @@ const uint8_t notificationOff[] = {0x0, 0x0};
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+//Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 #define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
+
+//Variables to store temperature and humidity
+char* temperatureR;
+char* humidityR;
+
+//Flags to check whether new temperature and humidity readings are available
+boolean newTemperatureR = false;
+boolean newHumidityR = false;
 
 //Connect to the BLE Server that has the name, Service, and Characteristics
 bool connectToServer(BLEAddress pAddress) {
@@ -96,32 +104,50 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 //When the BLE Server sends a new temperature reading with the notify property
 static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
                                         uint8_t* pData, size_t length, bool isNotify) {
-  display.setCursor(34,10);
-  display.print((char*)pData);
-  Serial.print("Temperature: ");
-  Serial.print((char*)pData);
-  #ifdef temperatureCelsius
-    //Temperature Celsius
-    display.print(" *C");
-    Serial.print(" *C");
-  #else
-    //Temperature Fahrenheit
-    display.print(" *F");
-    Serial.print(" *F");
-  #endif  
-  display.display();
+  //store temperature value
+  temperatureR = (char*)pData;
+  newTemperatureR = true;
 }
 
 //When the BLE Server sends a new humidity reading with the notify property
 static void humidityNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
                                     uint8_t* pData, size_t length, bool isNotify) {
-  display.setCursor(34,20);
-  display.print((char*)pData);
-  display.print(" %");
+  //store humidity value
+  humidityR = (char*)pData;
+  newHumidityR = true;
+}
+
+//function that prints the latest sensor readings in the OLED display
+void printDHTReadings(){
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.print("DHT SENSOR");
+  
+  //display temperature
+  display.setCursor(0,20);
+  display.print(temperatureR);
+  Serial.print("Temperature:");
+  Serial.print(temperatureR);
+  #ifdef temperatureCelsius
+    //Temperature Celsius
+    display.print("*C");
+    Serial.print("*C");
+  #else
+    //Temperature Fahrenheit
+    display.print("*F");
+    Serial.print("*F");
+  #endif
+
+  //display humidity
+  display.setCursor(0,40);
+  display.print(humidityR);
+  display.print("%");
   display.display();
-  Serial.print(" Humidity: ");
-  Serial.print((char*)pData); 
-  Serial.println(" %");
+  Serial.print(" Humidity:");
+  Serial.print(humidityR); 
+  Serial.println("%");
 }
 
 void setup() {
@@ -131,13 +157,11 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
-  
   display.clearDisplay();
-  display.setTextSize(1);
-  //display.setBackgroundcolor(BLACK);
+  display.setTextSize(2);
   display.setTextColor(WHITE,0);
-  display.setCursor(30,0);
-  display.print("DHT READINGS");
+  display.setCursor(0,0);
+  display.print("DHT SENSOR");
   display.display();
   
   //Start serial communication
@@ -171,6 +195,12 @@ void loop() {
       Serial.println("We have failed to connect to the server; Restart your device to scan for nearby BLE server again.");
     }
     doConnect = false;
+  }
+  //if new temperature readings are available, print in the OLED
+  if (newTemperatureR && newHumidityR){
+    newTemperatureR = false;
+    newHumidityR = false;
+    printDHTReadings();
   }
   delay(1000); // Delay a second between loops.
 }
