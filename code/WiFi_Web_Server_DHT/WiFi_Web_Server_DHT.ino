@@ -113,7 +113,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/humidity", true);
   xhttp.send();
-}, 12000 ) ;
+}, 10000 ) ;
 </script>
 </html>)rawliteral";
 
