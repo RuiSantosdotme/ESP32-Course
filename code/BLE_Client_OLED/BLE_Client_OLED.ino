@@ -87,6 +87,7 @@ bool connectToServer(BLEAddress pAddress) {
   //Assign callback functions for the Characteristics
   temperatureCharacteristic->registerForNotify(temperatureNotifyCallback);
   humidityCharacteristic->registerForNotify(humidityNotifyCallback);
+  return true;
 }
 
 //Callback function that gets called, when another device's advertisement has been received
