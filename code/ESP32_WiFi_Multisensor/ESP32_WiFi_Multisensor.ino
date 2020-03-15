@@ -279,22 +279,22 @@ void loop() {
             }
             client.println("<script> function setMode(value) { var xhr = new XMLHttpRequest();"); 
             client.println("xhr.open('GET', \"/?mode=\" + value + \"&\", true);"); 
-            client.println("xhr.send(); location.reload(true); } ");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); } ");
             client.println("function setTimer(value) { var xhr = new XMLHttpRequest();");
             client.println("xhr.open('GET', \"/?timer=\" + value + \"&\", true);"); 
-            client.println("xhr.send(); location.reload(true); } ");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); } ");
             client.println("function setThreshold(value) { var xhr = new XMLHttpRequest();");
             client.println("xhr.open('GET', \"/?ldrthreshold=\" + value + \"&\", true);"); 
-            client.println("xhr.send(); location.reload(true); } ");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); } ");
             client.println("function outputOn() { var xhr = new XMLHttpRequest();");
             client.println("xhr.open('GET', \"/?state=on\", true);"); 
-            client.println("xhr.send(); location.reload(true); } ");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); } ");
             client.println("function outputOff() { var xhr = new XMLHttpRequest();");
             client.println("xhr.open('GET', \"/?state=off\", true);"); 
-            client.println("xhr.send(); location.reload(true); } ");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); } ");
             client.println("function updateSensorReadings() { var xhr = new XMLHttpRequest();");
             client.println("xhr.open('GET', \"/?sensor\", true);"); 
-            client.println("xhr.send(); location.reload(true); }</script></body></html>");
+            client.println("xhr.send(); setInterval(function(){ location.reload(true); }, 1500); }</script></body></html>");
             // The HTTP response ends with another blank line
             client.println();
             // Break out of the while loop
