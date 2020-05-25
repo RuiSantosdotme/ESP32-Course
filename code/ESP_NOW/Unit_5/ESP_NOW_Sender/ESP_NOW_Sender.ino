@@ -26,7 +26,7 @@ const char* password = "123456789";
 DHT dht(DHTPIN, DHTTYPE);
 
 //MAC Address of the receiver 
-uint8_t broadcastAddress[] = {0x30, 0xAE, 0xA4, 0x15, 0xC7, 0xFC};
+uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 //Wi-Fi channel (must match the gateway wi-fi channel as an access point)
 #define CHAN_AP 2
