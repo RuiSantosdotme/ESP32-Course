@@ -12,6 +12,9 @@
 const char* ssid = "ESP32-Access-Point";
 const char* password = "123456789";
 
+// Set your Board ID (ESP32 Sender #1 = BOARD_ID 1, ESP32 Sender #2 = BOARD_ID 2, etc)
+#define BOARD_ID 1
+
 // Digital pin connected to the DHT sensor
 #define DHTPIN 4  
 
@@ -124,7 +127,7 @@ void loop() {
     // Save the last time a new reading was published
     previousMillis = currentMillis;
     //Set values to send
-    myData.id = 2;
+    myData.id = BOARD_ID;
     myData.temp = readDHTTemperature();
     myData.hum = readDHTHumidity();
     myData.readingId = readingId++;
