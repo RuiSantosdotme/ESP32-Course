@@ -78,13 +78,13 @@ void loop() {
     }
 
     //print RSSI of packet
-    int rrsi = LoRa.packetRssi();
+    int rssi = LoRa.packetRssi();
     Serial.print(" with RSSI ");    
-    Serial.println(rrsi);
+    Serial.println(rssi);
     display.setCursor(0,20);
     display.print("RSSI: ");
     display.setCursor(30,20);    
-    display.print(rrsi);
+    display.print(rssi);
     display.display();
   }
 }
