@@ -19,6 +19,7 @@
     A connect hander associated with the server starts a background task that performs notification
     every couple of seconds.
 */
+
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -46,8 +47,6 @@ class MyServerCallbacks: public BLEServerCallbacks {
     deviceConnected = false;
   }
 };
-
-
 
 void setup() {
   Serial.begin(115200);
