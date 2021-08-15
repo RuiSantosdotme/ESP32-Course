@@ -24,6 +24,9 @@ Adafruit_BME280 bme;
 // REPLACE WITH THE MAC Address of your receiver 
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+// Variable to add info about peer
+esp_now_peer_info_t peerInfo;
+
 // Define variables to store BME280 readings to be sent
 float temperature;
 float humidity;
@@ -104,7 +107,6 @@ void setup() {
   esp_now_register_send_cb(OnDataSent);
   
   // Register peer
-  esp_now_peer_info_t peerInfo;
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.channel = 0;  
   peerInfo.encrypt = false;
