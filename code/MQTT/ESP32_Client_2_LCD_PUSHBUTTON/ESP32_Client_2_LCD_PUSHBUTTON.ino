@@ -4,10 +4,13 @@
 *********/
 
 #include <WiFi.h>
+#include <Wire.h>
+
 extern "C" {
   #include "freertos/FreeRTOS.h"
   #include "freertos/timers.h"
 }
+
 #include <AsyncMqttClient.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -124,10 +127,9 @@ void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties 
     messageTemp += (char)payload[i];
   }
   if (strcmp(topic, "esp32/temperature") == 0) {
-    lcd.clear();
-    lcd.setCursor(1, 0);
-    lcd.write(0);
-    lcd.print(" Temperature");
+    Serial.println("=== Updating LCD... ===");
+    Wire.setClock(10000);
+    lcd.print(std::string(" ", lcdColumns).c_str()); // Clears row, better than the slow lcd.clear()
     lcd.setCursor(0, 1);
     lcd.print(messageTemp);
   }
@@ -158,6 +160,10 @@ void setup() {
   lcd.backlight();
   // Create thermometer icon
   lcd.createChar(0, thermometerIcon);
+  lcd.setCursor(1, 0);
+  lcd.write(0);
+  // Print header
+  lcd.print(" Temperature");
   
   // Define buttonPin as an INPUT
   pinMode(buttonPin, INPUT);
