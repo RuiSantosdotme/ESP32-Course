@@ -34,7 +34,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   Serial.println();
 }
  
-void setup() {put
+void setup() {
   // Initialize Serial Monitor
   Serial.begin(115200);
   
