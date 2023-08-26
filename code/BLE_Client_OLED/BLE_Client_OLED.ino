@@ -1,6 +1,6 @@
 /*********
   Rui Santos
-  Complete project details at http://randomnerdtutorials.com  
+  Complete project details at https://randomnerdtutorials.com  
 *********/
 
 #include "BLEDevice.h"
@@ -8,31 +8,23 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
 
-//Default Temperature is in Celsius
-//Comment the next line for Temperature in Fahrenheit
-#define temperatureCelsius
-
 //BLE Server name (the other ESP32 name running the server sketch)
-#define bleServerName "dhtESP32"
+#define bleServerName "ESP32_DHT"
 
-//UUID's of the service, characteristic that we want to read and characteristic that we want to write.
-static BLEUUID dhtServiceUUID("91bad492-b950-4226-aa2b-4ede9fa42f59");
+//UUID's of the service, characteristic that we want to read
+static BLEUUID dhtServiceUUID(BLEUUID((uint16_t)0x181A));
 
-#ifdef temperatureCelsius
-  //Temperature Celsius Characteristic
-  static BLEUUID temperatureCharacteristicUUID("cba1d466-344c-4be3-ab3f-189f80dd7518");
-#else
-  //Temperature Fahrenheit Characteristic
-  static BLEUUID temperatureCharacteristicUUID("f78ebbff-c8b7-4107-93de-889a6a06d408");
-#endif
+//Temperature Characteristic
+static BLEUUID temperatureCharacteristicUUID((uint16_t)0x2A6E);
 
-static BLEUUID humidityCharacteristicUUID("ca73b3ba-39f6-4ab3-91ae-186dc9577d99");
+//Humidity Characteristic
+static BLEUUID humidityCharacteristicUUID((uint16_t)0x2A6F);
 
 //Flags stating if should begin connecting and if the connection is up
 static boolean doConnect = false;
 static boolean connected = false;
 
-//Address of the peripheral device. Address will be found during scanning... Hopefully.
+//Address of the peripheral device. Address will be found during scanning..
 static BLEAddress *pServerAddress;
  
 //Characteristic that we want to read and characteristic that we want to write.
@@ -51,8 +43,9 @@ const uint8_t notificationOff[] = {0x0, 0x0};
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
 
 //Variables to store temperature and humidity
-char* temperatureR;
-char* humidityR;
+#define MAX_STRING_LENGTH 10
+char temperatureR[MAX_STRING_LENGTH];
+char humidityR[MAX_STRING_LENGTH];
 
 //Flags to check whether new temperature and humidity readings are available
 boolean newTemperatureR = false;
@@ -104,51 +97,59 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
  
 //When the BLE Server sends a new temperature reading with the notify property
 static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
-                                        uint8_t* pData, size_t length, bool isNotify) {
-  //store temperature value
-  temperatureR = (char*)pData;
+                                      uint8_t* pData, size_t length, bool isNotify) {
+  // Reinterpret the received data as a uint16_t value
+  uint16_t temperatureValue = *(uint16_t*)pData;
+  // Convert the temperature value to a string for display
+  snprintf(temperatureR, MAX_STRING_LENGTH, "%d", temperatureValue);
   newTemperatureR = true;
 }
 
 //When the BLE Server sends a new humidity reading with the notify property
 static void humidityNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
-                                    uint8_t* pData, size_t length, bool isNotify) {
-  //store humidity value
-  humidityR = (char*)pData;
+                                   uint8_t* pData, size_t length, bool isNotify) {
+  // Reinterpret the received data as a uint16_t value
+  uint16_t humidityValue = *(uint16_t*)pData;
+  // Convert the humidity value to a string for display
+  snprintf(humidityR, MAX_STRING_LENGTH, "%d", humidityValue);
   newHumidityR = true;
 }
 
 //function that prints the latest sensor readings in the OLED display
 void printDHTReadings(){
   display.clearDisplay();
-  display.setTextSize(2);
   display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.print("DHT SENSOR");
   
   //display temperature
-  display.setCursor(0,20);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.print("Temperature: ");
+  display.setTextSize(2);
+  display.setCursor(0,10);
   display.print(temperatureR);
+  display.print(" ");
+  display.setTextSize(1);
+  display.cp437(true);
+  display.write(167);
+  display.setTextSize(2);
+  display.print("C");
   Serial.print("Temperature:");
   Serial.print(temperatureR);
-  #ifdef temperatureCelsius
-    //Temperature Celsius
-    display.print("*C");
-    Serial.print("*C");
-  #else
-    //Temperature Fahrenheit
-    display.print("*F");
-    Serial.print("*F");
-  #endif
+  Serial.print("ºC");
 
   //display humidity
-  display.setCursor(0,40);
+  display.setTextSize(1);
+  display.setCursor(0, 35);
+  display.print("Humidity: ");
+  display.setTextSize(2);
+  display.setCursor(0, 45);
   display.print(humidityR);
-  display.print("%");
-  display.display();
+  display.print(" %"); 
   Serial.print(" Humidity:");
   Serial.print(humidityR); 
   Serial.println("%");
+
+  display.display();
 }
 
 void setup() {
@@ -158,12 +159,6 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE,0);
-  display.setCursor(0,0);
-  display.print("DHT SENSOR");
-  display.display();
   
   //Start serial communication
   Serial.begin(115200);
