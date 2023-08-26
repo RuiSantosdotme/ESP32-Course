@@ -1,6 +1,6 @@
 /*********
   Rui Santos
-  Complete project details at http://randomnerdtutorials.com  
+  Complete project details at https://randomnerdtutorials.com  
 *********/
 
 #include <BLEDevice.h>
@@ -9,32 +9,26 @@
 #include <BLE2902.h>
 #include "DHT.h"
 
-//Default Temperature is in Celsius
-//Comment the next line for Temperature in Fahrenheit
-#define temperatureCelsius
-
 //BLE server name
-#define bleServerName "dhtESP32"
+#define bleServerName "ESP32_DHT"
 
 // Uncomment one of the lines below for whatever DHT sensor type you're using!
 #define DHTTYPE DHT11   // DHT 11
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 //#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
-// See the following for generating UUIDs:
-// https://www.uuidgenerator.net/
-#define SERVICE_UUID "91bad492-b950-4226-aa2b-4ede9fa42f59"
+// Default UUID for Environmental Sensing Service
+// https://www.bluetooth.com/specifications/assigned-numbers/
+#define SERVICE_UUID (BLEUUID((uint16_t)0x181A))
 
-#ifdef temperatureCelsius
-  BLECharacteristic dhtTemperatureCelsiusCharacteristics("cba1d466-344c-4be3-ab3f-189f80dd7518", BLECharacteristic::PROPERTY_NOTIFY);
-  BLEDescriptor dhtTemperatureCelsiusDescriptor(BLEUUID((uint16_t)0x2902));
-#else
-  BLECharacteristic dhtTemperatureFahrenheitCharacteristics("f78ebbff-c8b7-4107-93de-889a6a06d408", BLECharacteristic::PROPERTY_NOTIFY);
-  BLEDescriptor dhtTemperatureFahrenheitDescriptor(BLEUUID((uint16_t)0x2901));
-#endif
+// Temperature Characteristic and Descriptor (default UUID)
+// Check the default UUIDs here: https://www.bluetooth.com/specifications/assigned-numbers/
+BLECharacteristic dhtTemperatureCharacteristic(BLEUUID((uint16_t)0x2A6E), BLECharacteristic::PROPERTY_NOTIFY);
+BLEDescriptor dhtTemperatureDescriptor(BLEUUID((uint16_t)0x2902));
 
-BLECharacteristic dhtHumidityCharacteristics("ca73b3ba-39f6-4ab3-91ae-186dc9577d99", BLECharacteristic::PROPERTY_NOTIFY);
-BLEDescriptor dhtHumidityDescriptor(BLEUUID((uint16_t)0x2903));
+// Humidity Characteristic and Descriptor (default UUID)
+BLECharacteristic dhtHumidityCharacteristic(BLEUUID((uint16_t)0x2A6F), BLECharacteristic::PROPERTY_NOTIFY);
+BLEDescriptor dhtHumidityDescriptor(BLEUUID((uint16_t)0x2902));
 
 // DHT Sensor
 const int DHTPin = 14;
@@ -48,9 +42,11 @@ bool deviceConnected = false;
 class MyServerCallbacks: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
     deviceConnected = true;
+    Serial.println("Device Connected");
   };
   void onDisconnect(BLEServer* pServer) {
     deviceConnected = false;
+    Serial.println("Device Disconnected");
   }
 };
 
@@ -71,22 +67,12 @@ void setup() {
   // Create the BLE Service
   BLEService *dhtService = pServer->createService(SERVICE_UUID);
 
-  // Create BLE Characteristics and Create a BLE Descriptor
-  // Descriptor bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml       
-
-  #ifdef temperatureCelsius
-    dhtService->addCharacteristic(&dhtTemperatureCelsiusCharacteristics);
-    dhtTemperatureCelsiusDescriptor.setValue("DHT temperature Celsius");
-    dhtTemperatureCelsiusCharacteristics.addDescriptor(new BLE2902());
-  #else
-    dhtService->addCharacteristic(&dhtTemperatureFahrenheitCharacteristics);
-    dhtTemperatureFahrenheitDescriptor.setValue("DHT temperature Fahrenheit");
-    dhtTemperatureFahrenheitCharacteristics.addDescriptor(new BLE2902());
-  #endif  
+  // Create BLE Characteristics and corresponding Descriptors
+  dhtService->addCharacteristic(&dhtTemperatureCharacteristic);
+  dhtTemperatureCharacteristic.addDescriptor(&dhtTemperatureDescriptor);
   
-  dhtService->addCharacteristic(&dhtHumidityCharacteristics);
-  dhtHumidityDescriptor.setValue("DHT humidity");
-  dhtHumidityCharacteristics.addDescriptor(new BLE2902());
+  dhtService->addCharacteristic(&dhtHumidityCharacteristic);
+  dhtHumidityCharacteristic.addDescriptor(&dhtHumidityDescriptor);
   
   // Start the service
   dhtService->start();
@@ -110,33 +96,22 @@ void loop() {
       Serial.println("Failed to read from DHT sensor!");
       return;
     }
+    
     //Notify temperature reading from DHT sensor
-    #ifdef temperatureCelsius
-      static char temperatureCTemp[7];
-      dtostrf(t, 6, 2, temperatureCTemp);
-      //Set temperature Characteristic value and notify connected client
-      dhtTemperatureCelsiusCharacteristics.setValue(temperatureCTemp);
-      dhtTemperatureCelsiusCharacteristics.notify();
-      Serial.print("Temperature Celsius: ");
-      Serial.print(t);
-      Serial.print(" *C");
-    #else
-      static char temperatureFTemp[7];
-      dtostrf(f, 6, 2, temperatureFTemp);
-      //Set temperature Characteristic value and notify connected client
-      dhtTemperatureFahrenheitCharacteristics.setValue(temperatureFTemp);
-      dhtTemperatureFahrenheitCharacteristics.notify();
-      Serial.print("Temperature Fahrenheit: ");
-      Serial.print(f);
-      Serial.print(" *F");
-    #endif
+    uint16_t temperatureCTemp = (uint16_t)t;
+    //Set temperature Characteristic value and notify connected client
+    dhtTemperatureCharacteristic.setValue(temperatureCTemp);
+    dhtTemperatureCharacteristic.notify();
+    Serial.print("Temperature Celsius: ");
+    Serial.print(t);
+    Serial.print(" *C");
+   
     
     //Notify humidity reading from DHT
-    static char humidityTemp[7];
-    dtostrf(h, 6, 2, humidityTemp);
+    uint16_t humidityTemp = (uint16_t)h;
     //Set humidity Characteristic value and notify connected client
-    dhtHumidityCharacteristics.setValue(humidityTemp);
-    dhtHumidityCharacteristics.notify();   
+    dhtHumidityCharacteristic.setValue(humidityTemp);
+    dhtHumidityCharacteristic.notify();   
     Serial.print(" - Humidity: ");
     Serial.print(h);
     Serial.println(" %");
