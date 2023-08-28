@@ -21,6 +21,9 @@ extern "C" {
 #define MQTT_HOST IPAddress(192, 168, 1, X)
 #define MQTT_PORT 1883
 
+#define BROKER_USER "REPLACE_WITH_BROKER_USERNAME"
+#define BROKER_PASS "REPLACE_WITH_BROKER_PASSWORD"
+
 // Create objects to handle MQTT client
 AsyncMqttClient mqttClient;
 TimerHandle_t mqttReconnectTimer;
@@ -172,6 +175,7 @@ void setup() {
   mqttClient.onMessage(onMqttMessage);
   mqttClient.onPublish(onMqttPublish);
   mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+  mqttClient.setCredentials(BROKER_USER, BROKER_PASS);
 
   connectToWifi();
 }
