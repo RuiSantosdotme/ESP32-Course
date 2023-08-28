@@ -25,6 +25,9 @@ DHT dht(DHTPIN, DHTTYPE);
 //MAC Address of the receiver 
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+// Variable to add info about peer
+esp_now_peer_info_t peerInfo;
+
 //Structure example to send data
 //Must match the receiver structure
 typedef struct struct_message {
@@ -120,7 +123,6 @@ void setup() {
   esp_now_register_send_cb(OnDataSent);
   
   //Register peer
-  esp_now_peer_info_t peerInfo;
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.encrypt = false;
   
