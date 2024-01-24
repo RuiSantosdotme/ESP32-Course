@@ -1,6 +1,6 @@
 /*********
   Rui Santos
-  Complete project details at http://randomnerdtutorials.com  
+  Complete project details at https://RandomNerdTutorials.com/
   Written by BARRAGAN and modified by Scott Fitzgerald
 *********/
 
