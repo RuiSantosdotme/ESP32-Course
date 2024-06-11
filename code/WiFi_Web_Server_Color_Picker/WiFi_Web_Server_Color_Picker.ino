@@ -48,14 +48,9 @@ const long timeoutTime = 2000;
 void setup() {
   Serial.begin(115200);
   // configure LED PWM functionalitites
-  ledcSetup(redChannel, freq, resolution);
-  ledcSetup(greenChannel, freq, resolution);
-  ledcSetup(blueChannel, freq, resolution);
-  
-  // attach the channel to the GPIO to be controlled
-  ledcAttachPin(redPin, redChannel);
-  ledcAttachPin(greenPin, greenChannel);
-  ledcAttachPin(bluePin, blueChannel);
+  ledcAttachChannel(redPin, freq, resolution, redChannel);
+  ledcAttachChannel(greenPin, freq, resolution, greenChannel);
+  ledcAttachChannel(bluePin, freq, resolution, blueChannel);
   
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
@@ -125,9 +120,9 @@ void loop(){
               /*Serial.println(redString.toInt());
               Serial.println(greenString.toInt());
               Serial.println(blueString.toInt());*/
-              ledcWrite(redChannel, redString.toInt());
-              ledcWrite(greenChannel, greenString.toInt());
-              ledcWrite(blueChannel, blueString.toInt());
+              ledcWrite(redPin, redString.toInt());
+              ledcWrite(greenPin, greenString.toInt());
+              ledcWrite(bluePin, blueString.toInt());
             }
             // Break out of the while loop
             break;
