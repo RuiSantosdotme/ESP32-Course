@@ -1,3 +1,3 @@
-# Learn ESP32 with Arduino IDE Course
+# Learn ESP32 with Arduino IDE Course (2nd Edition)
 
-Official course page: http://randomnerdtutorials.com/learn-esp32-with-arduino-ide
+More information about the Course » https://RandomNerdTutorials.com/learn-esp32-with-arduino-ide/
