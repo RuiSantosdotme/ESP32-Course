@@ -1,10 +1,11 @@
 /*********
   Rui Santos
   Complete project details at https://RandomNerdTutorials.com/
-  Written by BARRAGAN and modified by Scott Fitzgerald
 *********/
 
-#include <Servo.h>
+// Install the ESP32Servo Library: https://www.arduino.cc/reference/en/libraries/esp32servo/
+// Sketch > Include Library > Manage Libraries... > ESP32Servo by Kevin Harrington
+#include <ESP32Servo.h>
 
 static const int servoPin = 13;
 
