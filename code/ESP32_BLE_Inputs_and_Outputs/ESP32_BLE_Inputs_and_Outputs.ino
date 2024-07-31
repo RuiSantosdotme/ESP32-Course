@@ -44,7 +44,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 // Setup callback when new value is received (from the Android application)
 class MyCallbacks: public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) {
-    std::string rxValue = pCharacteristic->getValue();
+    String rxValue = pCharacteristic->getValue();
     if(rxValue.length() > 0) {
       Serial.print("Received value: ");
       for(int i = 0; i < rxValue.length(); i++) {
