@@ -3,8 +3,11 @@
   Complete project details at http://randomnerdtutorials.com  
 *********/
 
+// Install the ESP32Servo Library: https://www.arduino.cc/reference/en/libraries/esp32servo/
+// Sketch > Include Library > Manage Libraries... > ESP32Servo by Kevin Harrington
+#include <ESP32Servo.h>
+
 #include <WiFi.h>
-#include <Servo.h>
 
 Servo myservo;  // create servo object to control a servo
 // twelve servo objects can be created on most boards
