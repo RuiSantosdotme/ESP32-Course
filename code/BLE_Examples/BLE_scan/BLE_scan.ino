@@ -8,13 +8,13 @@
 #include <BLEScan.h>
 #include <BLEAdvertisedDevice.h>
 
-int scanTime = 5; //In seconds
+int scanTime = 5; // in seconds
 BLEScan* pBLEScan;
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
-    void onResult(BLEAdvertisedDevice advertisedDevice) {
-      Serial.printf("Advertised Device: %s \n", advertisedDevice.toString().c_str());
-    }
+  void onResult(BLEAdvertisedDevice advertisedDevice) {
+    Serial.printf("Advertised Device: %s \n", advertisedDevice.toString().c_str());
+  }
 };
 
 void setup() {
@@ -31,9 +31,9 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  BLEScanResults foundDevices = pBLEScan->start(scanTime, false);
+  BLEScanResults *foundDevices = pBLEScan->start(scanTime, false);
   Serial.print("Devices found: ");
-  Serial.println(foundDevices.getCount());
+  Serial.println(foundDevices->getCount());
   Serial.println("Scan done!");
   pBLEScan->clearResults();   // delete results fromBLEScan buffer to release memory
   delay(2000);
