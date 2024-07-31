@@ -1,3 +1,5 @@
+// DEPRECATED - This code only works with ESP32 Arduino Core version 2.0.X
+
 // the number of the LED pin
 const int ledPin = 16;  // 16 corresponds to GPIO16
 const int ledPin2 = 17; // 17 corresponds to GPIO17
