@@ -53,15 +53,13 @@ void setup() {
   pinMode(motor2Pin1, OUTPUT);
   pinMode(motor2Pin2, OUTPUT);
 
-  // Configure PWM channel functionalitites
-  ledcSetup(pwmChannel, freq, resolution);
-  
-  // Attach the PWM channel 0 to the enable pins which are the GPIOs to be controlled
-  ledcAttachPin(enable1Pin, pwmChannel);
-  ledcAttachPin(enable2Pin, pwmChannel); 
+  // Configure PWM pins
+  ledcAttach(enable1Pin, freq, resolution);
+  ledcAttach(enable2Pin, freq, resolution);
 
   // Produce a PWM signal to both enable pins with a duty cycle 0
-  ledcWrite(pwmChannel, dutyCycle);
+  ledcWrite(enable1Pin, dutyCycle);
+  ledcWrite(enable2Pin, dutyCycle);
   
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Setting AP (Access Point)...");
@@ -165,7 +163,8 @@ void loop(){
               valueString = header.substring(pos1+1, pos2);
               //Set motor speed value
               if (valueString == "0") {
-                ledcWrite(pwmChannel, 0);
+                ledcWrite(enable1Pin, 0);
+                ledcWrite(enable2Pin, 0);
                 digitalWrite(motor1Pin1, LOW); 
                 digitalWrite(motor1Pin2, LOW); 
                 digitalWrite(motor2Pin1, LOW);
@@ -173,7 +172,8 @@ void loop(){
               }
               else { 
                 dutyCycle = map(valueString.toInt(), 25, 100, 200, 255);
-                ledcWrite(pwmChannel, dutyCycle);
+                ledcWrite(enable1Pin, dutyCycle);
+                ledcWrite(enable2Pin, dutyCycle);
                 Serial.println(valueString);
               } 
             }         
