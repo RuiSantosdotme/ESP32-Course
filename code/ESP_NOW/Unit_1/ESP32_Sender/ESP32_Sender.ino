@@ -9,9 +9,6 @@
 // REPLACE WITH YOUR RECEIVER MAC Address
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-// Variable to add info about peer
-esp_now_peer_info_t peerInfo;
-
 // Structure example to send data
 // Must match the receiver structure
 typedef struct struct_message {
@@ -23,6 +20,8 @@ typedef struct struct_message {
 
 // Create a struct_message called myData
 struct_message myData;
+
+esp_now_peer_info_t peerInfo;
 
 // callback when data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -65,7 +64,7 @@ void loop() {
   myData.b = random(1,20);
   myData.c = 1.2;
   myData.d = false;
-
+  
   // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
    
