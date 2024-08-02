@@ -24,9 +24,6 @@ Adafruit_BME280 bme;
 // REPLACE WITH THE MAC Address of your receiver 
 uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-// Variable to add info about peer
-esp_now_peer_info_t peerInfo;
-
 // Define variables to store BME280 readings to be sent
 float temperature;
 float humidity;
@@ -53,6 +50,8 @@ struct_message BME280Readings;
 
 // Create a struct_message to hold incoming sensor readings
 struct_message incomingReadings;
+
+esp_now_peer_info_t peerInfo;
 
 // Callback when data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -117,7 +116,7 @@ void setup() {
     return;
   }
   // Register for a callback function that will be called when data is received
-  esp_now_register_recv_cb(OnDataRecv);
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
  
 void loop() {
