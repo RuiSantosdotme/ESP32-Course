@@ -51,11 +51,11 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         Serial.print(rxValue[i]);
       }
       // Turn the LED ON or OFF according to the command received
-      if(rxValue.find("ON") != -1) { 
+      if(rxValue.indexOf("ON") >= 0) { 
         Serial.println(" - LED ON");
         digitalWrite(ledPin, HIGH);
       }
-      else if(rxValue.find("OFF") != -1) {
+      else if(rxValue.indexOf("OFF") >= 0) {
         Serial.println(" - LED OFF");
         digitalWrite(ledPin, LOW);
       }
